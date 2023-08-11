@@ -1,2 +1,3 @@
 .pytest_cache
 .ruff_cache
+sqids.egg-info

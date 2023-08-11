@@ -1,0 +1,23 @@
+[project]
+name = "sqids"
+description = "Generate YouTube-like ids from numbers."
+version = "0.1.0"
+readme = "README.md"
+authors = []
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+keywords = ["sqids", "encode", "generate", "ids", "hashids"]
+requires-python = ">=3.8"
+
+[project.urls]
+Homepage = "https://sqids.org/python"
+
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
