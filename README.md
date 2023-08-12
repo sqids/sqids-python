@@ -2,7 +2,7 @@
 
 [![Github Actions](https://img.shields.io/github/actions/workflow/status/sqids/sqids-python/tests.yml)](https://github.com/sqids/sqids-python/actions)
 
-Sqids (pronounced "squids") is a small library that lets you generate YouTube-looking IDs from numbers. It"s good for link shortening, fast & URL-safe ID generation and decoding back into numbers for quicker database lookups.
+Sqids (pronounced "squids") is a small library that lets you generate YouTube-looking IDs from numbers. It's good for link shortening, fast & URL-safe ID generation and decoding back into numbers for quicker database lookups.
 
 ## Getting started
 
