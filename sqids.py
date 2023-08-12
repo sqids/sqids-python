@@ -697,6 +697,9 @@ class Sqids:
             chunks = id_str.split(separator)
             if chunks:
                 alphabet_without_separator = alphabet[:-1]
+                for char in chunks[0]:
+                    if char not in alphabet_without_separator:
+                        return []
                 ret.append(self.to_number(chunks[0], alphabet_without_separator))
 
                 if len(chunks) > 1:

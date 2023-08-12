@@ -90,6 +90,11 @@ def test_decoding_empty_string():
     assert sqids.decode("") == []
 
 
+def test_decoding_bad_id_with_repeating_reserved_chars():
+    sqids = Sqids()
+    assert sqids.decode("fff") == []
+
+
 def test_decoding_invalid_character():
     sqids = Sqids()
     assert sqids.decode("*") == []
