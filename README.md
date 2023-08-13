@@ -54,6 +54,9 @@ id = sqids.encode([1, 2, 3]) # "8QRLaD"
 numbers = sqids.decode(id) # [1, 2, 3]
 ```
 
+> **Note**
+> 🚧 Because of the algorithm's design, **multiple IDs can decode back into the same sequence of numbers**. If it's important to your design that IDs are canonical, you have to manually re-encode decoded numbers and check that the generated ID matches.
+
 Randomize IDs by providing a custom alphabet:
 
 ```python
