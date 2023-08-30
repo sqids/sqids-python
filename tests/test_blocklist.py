@@ -47,3 +47,15 @@ def test_match_against_short_blocklist_word():
     sqids = Sqids(blocklist={"pPQ"})
 
     assert sqids.decode(sqids.encode([1000])) == [1000]
+
+
+def test_blocklist_filtering_in_constructor():
+    # lowercase blocklist in only-uppercase alphabet
+    sqids = Sqids(alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ", blocklist={"sqnmpn"})
+
+    id = sqids.encode([1, 2, 3])
+    numbers = sqids.decode(id)
+
+    # without blocklist, would've been "SQNMPN"
+    assert id == "ULPBZGBM"
+    assert numbers == [1, 2, 3]

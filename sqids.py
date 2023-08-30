@@ -592,13 +592,14 @@ class Sqids:
             raise ValueError(f"Minimum length has to be between {min} and {max}")
 
         filtered_blocklist = set()
-        alphabet_chars = list(alphabet)
+        alphabet_chars = list(alphabet.lower())
         for word in blocklist:
             if len(word) >= 3:
-                word_chars = list(word)
+                word_lower = word.lower()
+                word_chars = list(word_lower)
                 intersection = [c for c in word_chars if c in alphabet_chars]
                 if len(intersection) == len(word_chars):
-                    filtered_blocklist.add(word.lower())
+                    filtered_blocklist.add(word_lower)
 
         self.alphabet = self.shuffle(alphabet)
         self.min_length = min_length
