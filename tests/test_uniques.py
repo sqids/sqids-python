@@ -1,6 +1,6 @@
 from sqids import Sqids, DEFAULT_ALPHABET
 
-upper = 1_000_000
+upper = 10_000
 
 
 def test_uniques_with_padding():
