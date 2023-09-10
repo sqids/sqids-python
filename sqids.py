@@ -621,7 +621,7 @@ class Sqids:
 
     def encode_numbers(self, numbers, increment=0):
         if increment > len(self.alphabet):
-            raise ValueError(f"Reached max attempts to re-generate the ID")
+            raise ValueError("Reached max attempts to re-generate the ID")
 
         offset = sum(
             (

@@ -30,7 +30,7 @@ def test_custom_blocklist():
 def test_blocklist():
     sqids = Sqids(
         blocklist={
-            "JSwXFaosAN",  # normal result of 1st encoding, let's block that word on purpose
+            "JSwXFaosAN",  # normal result of 1st encoding, block that word on purpose
             "OCjV9JK64o",  # result of 2nd encoding
             "rBHf",  # result of 3rd encoding is `4rBHfOiqd3`, let's block a substring
             "79SM",  # result of 4th encoding is `dyhgw479SM`, let's block the postfix
