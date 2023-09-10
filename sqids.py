@@ -576,20 +576,23 @@ class Sqids:
         if blocklist is None:
             blocklist = DEFAULT_BLOCKLIST
 
-        if len(alphabet) < 5:
-            raise ValueError("Alphabet length must be at least 5")
+        for char in alphabet:
+            if ord(char) > 127:
+                raise ValueError("Alphabet cannot contain multibyte characters")
+
+        if len(alphabet) < 3:
+            raise ValueError("Alphabet length must be at least 3")
 
         if len(set(alphabet)) != len(alphabet):
             raise ValueError("Alphabet must contain unique characters")
 
+        minLengthLimit = 255
         if (
             not isinstance(min_length, int)
-            or min_length < self.min_value()
-            or min_length > len(alphabet)
+            or min_length < 0
+            or min_length > minLengthLimit
         ):
-            min = self.min_value()
-            max = len(alphabet)
-            raise ValueError(f"Minimum length has to be between {min} and {max}")
+            raise ValueError(f"Minimum length has to be between 0 and {minLengthLimit}")
 
         filtered_blocklist = set()
         alphabet_chars = list(alphabet.lower())
@@ -609,17 +612,17 @@ class Sqids:
         if not numbers:
             return ""
 
-        in_range_numbers = [
-            n for n in numbers if self.min_value() <= n <= self.max_value()
-        ]
+        in_range_numbers = [n for n in numbers if 0 <= n <= sys.maxsize]
         if len(in_range_numbers) != len(numbers):
-            min = self.min_value()
-            max = self.max_value()
-            raise ValueError(f"Encoding supports numbers between {min} and {max}")
+            max = sys.maxsize
+            raise ValueError(f"Encoding supports numbers between 0 and {max}")
 
-        return self.encode_numbers(numbers, False)
+        return self.encode_numbers(numbers, 0)
 
-    def encode_numbers(self, numbers, partitioned=False):
+    def encode_numbers(self, numbers, increment=0):
+        if increment > len(self.alphabet):
+            raise ValueError(f"Reached max attempts to re-generate the ID")
+
         offset = sum(
             (
                 ord(self.alphabet[v % len(self.alphabet)]) + i
@@ -627,96 +630,64 @@ class Sqids:
             ),
             start=len(numbers),
         ) % len(self.alphabet)
+        offset = (offset + increment) % len(self.alphabet)
         alphabet = self.alphabet[offset:] + self.alphabet[:offset]
         prefix = alphabet[0]
-        partition = alphabet[1]
-        alphabet = alphabet[2:]
+        alphabet = alphabet[::-1]
 
         ret = [prefix]
 
         for i, num in enumerate(numbers):
-            alphabet_without_separator = alphabet[:-1]
-            ret.append(self.to_id(num, alphabet_without_separator))
+            ret.append(self.to_id(num, alphabet[1:]))
 
             if i < len(numbers) - 1:
-                separator = alphabet[-1]
-                if partitioned and i == 0:
-                    ret.append(partition)
-                else:
-                    ret.append(separator)
-
+                ret.append(alphabet[0])
                 alphabet = self.shuffle(alphabet)
 
-        id_str = "".join(ret)
+        id = "".join(ret)
 
-        if self.min_length > len(id_str):
-            if not partitioned:
-                numbers = [0] + numbers
-                id_str = self.encode_numbers(numbers, True)
+        if self.min_length > len(id):
+            id += alphabet[0]
 
-            if self.min_length > len(id_str):
-                id_str = (
-                    id_str[:1] + alphabet[: self.min_length - len(id_str)] + id_str[1:]
-                )
+            while self.min_length - len(id) > 0:
+                alphabet = self.shuffle(alphabet)
+                id += alphabet[: min(self.min_length - len(id), len(alphabet))]
 
-        if self.is_blocked_id(id_str):
-            if partitioned:
-                if numbers[0] + 1 > self.max_value():
-                    raise ValueError("Ran out of range checking against the blocklist")
-                else:
-                    numbers[0] += 1
-            else:
-                numbers = [0] + numbers
-            id_str = self.encode_numbers(numbers, True)
+        if self.is_blocked_id(id):
+            id = self.encode_numbers(numbers, increment + 1)
 
-        return id_str
+        return id
 
-    def decode(self, id_str):
+    def decode(self, id):
         ret = []
 
-        if not id_str:
+        if not id:
             return ret
 
         alphabet_chars = list(self.alphabet)
-        if any(c not in alphabet_chars for c in id_str):
+        if any(c not in alphabet_chars for c in id):
             return ret
 
-        prefix = id_str[0]
+        prefix = id[0]
         offset = self.alphabet.index(prefix)
         alphabet = self.alphabet[offset:] + self.alphabet[:offset]
-        partition = alphabet[1]
-        alphabet = alphabet[2:]
-        id_str = id_str[1:]
+        alphabet = alphabet[::-1]
+        id = id[1:]
 
-        partition_index = id_str.find(partition)
-        if 0 < partition_index < len(id_str) - 1:
-            id_str = id_str[partition_index + 1 :]
-            alphabet = self.shuffle(alphabet)
-
-        while id_str:
-            separator = alphabet[-1]
-            chunks = id_str.split(separator)
+        while id:
+            separator = alphabet[0]
+            chunks = id.split(separator)
             if chunks:
-                alphabet_without_separator = alphabet[:-1]
-                for char in chunks[0]:
-                    if char not in alphabet_without_separator:
-                        return []
-                ret.append(self.to_number(chunks[0], alphabet_without_separator))
+                if chunks[0] == "":
+                    return ret
 
+                ret.append(self.to_number(chunks[0], alphabet[1:]))
                 if len(chunks) > 1:
                     alphabet = self.shuffle(alphabet)
 
-            id_str = separator.join(chunks[1:])
+            id = separator.join(chunks[1:])
 
         return ret
-
-    @staticmethod
-    def min_value():
-        return 0
-
-    @staticmethod
-    def max_value():
-        return sys.maxsize
 
     def shuffle(self, alphabet):
         chars = list(alphabet)
