@@ -571,17 +571,10 @@ DEFAULT_BLOCKLIST = [
 class Sqids:
     def __init__(
         self,
-        alphabet: Optional[str] = None,
-        min_length: Optional[int] = None,
-        blocklist: Optional[List[str]] = None
+        alphabet: str = DEFAULT_ALPHABET,
+        min_length: int = DEFAULT_MIN_LENGTH,
+        blocklist: List[str] = DEFAULT_BLOCKLIST
     ):
-        if alphabet is None:
-            alphabet = DEFAULT_ALPHABET
-        if min_length is None:
-            min_length = DEFAULT_MIN_LENGTH
-        if blocklist is None:
-            blocklist = DEFAULT_BLOCKLIST
-
         for char in alphabet:
             if ord(char) > 127:
                 raise ValueError("Alphabet cannot contain multibyte characters")
