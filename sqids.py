@@ -597,7 +597,8 @@ class Sqids:
 
         MIN_LENGTH_LIMIT = 255
         if min_length < 0 or min_length > MIN_LENGTH_LIMIT:
-            raise ValueError(f"Minimum length has to be between 0 and {MIN_LENGTH_LIMIT}")
+            max = MIN_LENGTH_LIMIT
+            raise ValueError(f"Minimum length has to be between 0 and {max}")
 
         filtered_blocklist: Set[str] = set()
         alphabet_chars = list(alphabet.lower())
