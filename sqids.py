@@ -625,7 +625,7 @@ class Sqids:
 
         return self.encode_numbers(numbers, 0)
 
-    def encode_numbers(self, numbers: List[int], increment: int = 0):
+    def encode_numbers(self, numbers: List[int], increment: int = 0) -> str:
         if increment > len(self.alphabet):
             raise ValueError("Reached max attempts to re-generate the ID")
 
