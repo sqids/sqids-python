@@ -1,4 +1,4 @@
-from typing import List, Optional, Set
+from typing import List, Set
 import sys
 
 
@@ -573,7 +573,7 @@ class Sqids:
         self,
         alphabet: str = DEFAULT_ALPHABET,
         min_length: int = DEFAULT_MIN_LENGTH,
-        blocklist: List[str] = DEFAULT_BLOCKLIST
+        blocklist: List[str] = DEFAULT_BLOCKLIST,
     ):
         for char in alphabet:
             if ord(char) > 127:
@@ -667,7 +667,7 @@ class Sqids:
         if any(c not in alphabet_chars for c in id):
             return ret
 
-        prefix= id[0]
+        prefix = id[0]
         offset = self.__alphabet.index(prefix)
         alphabet = self.__alphabet[offset:] + self.__alphabet[:offset]
         alphabet = alphabet[::-1]
