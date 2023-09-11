@@ -1,3 +1,4 @@
+from typing import List, Optional, Set
 import sys
 
 
@@ -568,7 +569,12 @@ DEFAULT_BLOCKLIST = [
 
 
 class Sqids:
-    def __init__(self, alphabet=None, min_length=None, blocklist=None):
+    def __init__(
+        self,
+        alphabet: Optional[str] = None,
+        min_length: Optional[int] = None,
+        blocklist: Optional[List[str]] = None
+    ):
         if alphabet is None:
             alphabet = DEFAULT_ALPHABET
         if min_length is None:
@@ -593,7 +599,7 @@ class Sqids:
         if min_length < 0 or min_length > MIN_LENGTH_LIMIT:
             raise ValueError(f"Minimum length has to be between 0 and {MIN_LENGTH_LIMIT}")
 
-        filtered_blocklist = set()
+        filtered_blocklist: Set[str] = set()
         alphabet_chars = list(alphabet.lower())
         for word in blocklist:
             if len(word) >= 3:
@@ -607,7 +613,7 @@ class Sqids:
         self.min_length = min_length
         self.blocklist = filtered_blocklist
 
-    def encode(self, numbers):
+    def encode(self, numbers: List[int]) -> str:
         if not numbers:
             return ""
 
@@ -618,7 +624,7 @@ class Sqids:
 
         return self.encode_numbers(numbers, 0)
 
-    def encode_numbers(self, numbers, increment=0):
+    def encode_numbers(self, numbers: List[int], increment: int = 0):
         if increment > len(self.alphabet):
             raise ValueError("Reached max attempts to re-generate the ID")
 
@@ -657,8 +663,8 @@ class Sqids:
 
         return id
 
-    def decode(self, id):
-        ret = []
+    def decode(self, id: str) -> List[int]:
+        ret: List[int] = []
 
         if not id:
             return ret
@@ -667,7 +673,7 @@ class Sqids:
         if any(c not in alphabet_chars for c in id):
             return ret
 
-        prefix = id[0]
+        prefix= id[0]
         offset = self.alphabet.index(prefix)
         alphabet = self.alphabet[offset:] + self.alphabet[:offset]
         alphabet = alphabet[::-1]
@@ -688,7 +694,7 @@ class Sqids:
 
         return ret
 
-    def shuffle(self, alphabet):
+    def shuffle(self, alphabet: str) -> str:
         chars = list(alphabet)
 
         i = 0
@@ -701,8 +707,8 @@ class Sqids:
 
         return "".join(chars)
 
-    def to_id(self, num, alphabet):
-        id_str = []
+    def to_id(self, num: int, alphabet: str) -> str:
+        id_str: List[str] = []
         chars = list(alphabet)
         result = num
 
@@ -714,13 +720,13 @@ class Sqids:
 
         return "".join(id_str)
 
-    def to_number(self, id_str, alphabet):
+    def to_number(self, id_str: str, alphabet: str) -> int:
         chars = list(alphabet)
         return sum(
             chars.index(c) * (len(chars) ** i) for i, c in enumerate(id_str[::-1])
         )
 
-    def is_blocked_id(self, id_str):
+    def is_blocked_id(self, id_str: str) -> bool:
         id_str = id_str.lower()
 
         for word in self.blocklist:
