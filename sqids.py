@@ -586,13 +586,12 @@ class Sqids:
         if len(set(alphabet)) != len(alphabet):
             raise ValueError("Alphabet must contain unique characters")
 
-        minLengthLimit = 255
-        if (
-            not isinstance(min_length, int)
-            or min_length < 0
-            or min_length > minLengthLimit
-        ):
-            raise ValueError(f"Minimum length has to be between 0 and {minLengthLimit}")
+        if not isinstance(min_length, int):
+            raise TypeError("Minimum length must be an int")
+
+        MIN_LENGTH_LIMIT = 255
+        if min_length < 0 or min_length > MIN_LENGTH_LIMIT:
+            raise ValueError(f"Minimum length has to be between 0 and {MIN_LENGTH_LIMIT}")
 
         filtered_blocklist = set()
         alphabet_chars = list(alphabet.lower())
