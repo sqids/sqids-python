@@ -611,9 +611,7 @@ class Sqids:
 
         in_range_numbers = [n for n in numbers if 0 <= n <= sys.maxsize]
         if len(in_range_numbers) != len(numbers):
-            raise ValueError(
-                f"Encoding supports numbers between 0 and {sys.maxsize}"
-            )
+            raise ValueError(f"Encoding supports numbers between 0 and {sys.maxsize}")
 
         return self.__encode_numbers(numbers, 0)
 
@@ -717,10 +715,7 @@ class Sqids:
 
     def __to_number(self, id_: str, alphabet: str) -> int:
         chars = list(alphabet)
-        return sum(
-            chars.index(c) * (len(chars) ** i)
-            for i, c in enumerate(id_[::-1])
-        )
+        return sum(chars.index(c) * (len(chars) ** i) for i, c in enumerate(id_[::-1]))
 
     def __is_blocked_id(self, id_: str) -> bool:
         id_ = id_.lower()
