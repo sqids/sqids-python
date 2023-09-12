@@ -590,18 +590,16 @@ class Sqids:
 
         MIN_LENGTH_LIMIT = 255
         if min_length < 0 or min_length > MIN_LENGTH_LIMIT:
-            max = MIN_LENGTH_LIMIT
-            raise ValueError(f"Minimum length has to be between 0 and {max}")
+            raise ValueError(
+                f"Minimum length has to be between 0 and {MIN_LENGTH_LIMIT}"
+            )
 
         filtered_blocklist: Set[str] = set()
-        alphabet_chars = list(alphabet.lower())
-        for word in blocklist:
-            if len(word) >= 3:
-                word_lower = word.lower()
-                word_chars = list(word_lower)
-                intersection = [c for c in word_chars if c in alphabet_chars]
-                if len(intersection) == len(word_chars):
-                    filtered_blocklist.add(word_lower)
+        alphabet_lower = alphabet.lower()
+        for word_lower in (w.lower() for w in blocklist if len(w) >= 3):
+            intersection = [c for c in word_lower if c in alphabet_lower]
+            if len(intersection) == len(word_lower):
+                filtered_blocklist.add(word_lower)
 
         self.__alphabet = self.__shuffle(alphabet)
         self.__min_length = min_length
@@ -613,8 +611,9 @@ class Sqids:
 
         in_range_numbers = [n for n in numbers if 0 <= n <= sys.maxsize]
         if len(in_range_numbers) != len(numbers):
-            max = sys.maxsize
-            raise ValueError(f"Encoding supports numbers between 0 and {max}")
+            raise ValueError(
+                f"Encoding supports numbers between 0 and {sys.maxsize}"
+            )
 
         return self.__encode_numbers(numbers, 0)
 
@@ -639,52 +638,54 @@ class Sqids:
         for i, num in enumerate(numbers):
             ret.append(self.__to_id(num, alphabet[1:]))
 
-            if i < len(numbers) - 1:
-                ret.append(alphabet[0])
+            if i >= len(numbers) - 1:
+                continue
+
+            ret.append(alphabet[0])
+            alphabet = self.__shuffle(alphabet)
+
+        id_ = "".join(ret)
+
+        if self.__min_length > len(id_):
+            id_ += alphabet[0]
+
+            while self.__min_length - len(id_) > 0:
                 alphabet = self.__shuffle(alphabet)
+                id_ += alphabet[: min(self.__min_length - len(id_), len(alphabet))]
 
-        id = "".join(ret)
+        if self.__is_blocked_id(id_):
+            id_ = self.__encode_numbers(numbers, increment + 1)
 
-        if self.__min_length > len(id):
-            id += alphabet[0]
+        return id_
 
-            while self.__min_length - len(id) > 0:
-                alphabet = self.__shuffle(alphabet)
-                id += alphabet[: min(self.__min_length - len(id), len(alphabet))]
-
-        if self.__is_blocked_id(id):
-            id = self.__encode_numbers(numbers, increment + 1)
-
-        return id
-
-    def decode(self, id: str) -> List[int]:
+    def decode(self, id_: str) -> List[int]:
         ret: List[int] = []
 
-        if not id:
+        if not id_:
             return ret
 
         alphabet_chars = list(self.__alphabet)
-        if any(c not in alphabet_chars for c in id):
+        if any(c not in alphabet_chars for c in id_):
             return ret
 
-        prefix = id[0]
+        prefix = id_[0]
         offset = self.__alphabet.index(prefix)
         alphabet = self.__alphabet[offset:] + self.__alphabet[:offset]
         alphabet = alphabet[::-1]
-        id = id[1:]
+        id_ = id_[1:]
 
-        while id:
+        while id_:
             separator = alphabet[0]
-            chunks = id.split(separator)
+            chunks = id_.split(separator)
             if chunks:
-                if chunks[0] == "":
+                if not chunks[0]:
                     return ret
 
                 ret.append(self.__to_number(chunks[0], alphabet[1:]))
                 if len(chunks) > 1:
                     alphabet = self.__shuffle(alphabet)
 
-            id = separator.join(chunks[1:])
+            id_ = separator.join(chunks[1:])
 
         return ret
 
@@ -702,36 +703,38 @@ class Sqids:
         return "".join(chars)
 
     def __to_id(self, num: int, alphabet: str) -> str:
-        id_str: List[str] = []
+        id_chars: List[str] = []
         chars = list(alphabet)
         result = num
 
         while True:
-            id_str.insert(0, chars[result % len(chars)])
+            id_chars.insert(0, chars[result % len(chars)])
             result = result // len(chars)
             if result == 0:
                 break
 
-        return "".join(id_str)
+        return "".join(id_chars)
 
-    def __to_number(self, id_str: str, alphabet: str) -> int:
+    def __to_number(self, id_: str, alphabet: str) -> int:
         chars = list(alphabet)
         return sum(
-            chars.index(c) * (len(chars) ** i) for i, c in enumerate(id_str[::-1])
+            chars.index(c) * (len(chars) ** i)
+            for i, c in enumerate(id_[::-1])
         )
 
-    def __is_blocked_id(self, id_str: str) -> bool:
-        id_str = id_str.lower()
+    def __is_blocked_id(self, id_: str) -> bool:
+        id_ = id_.lower()
 
         for word in self.__blocklist:
-            if len(word) <= len(id_str):
-                if len(id_str) <= 3 or len(word) <= 3:
-                    if id_str == word:
-                        return True
-                elif any(c.isdigit() for c in word):
-                    if id_str.startswith(word) or id_str.endswith(word):
-                        return True
-                elif word in id_str:
+            if len(word) > len(id_):
+                continue
+            if len(id_) <= 3 or len(word) <= 3:
+                if id_ == word:
                     return True
+            elif any(c.isdigit() for c in word):
+                if id_.startswith(word) or id_.endswith(word):
+                    return True
+            elif word in id_:
+                return True
 
         return False
