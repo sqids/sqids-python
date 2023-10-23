@@ -1,1 +1,1 @@
-from .sqids import Sqids
+from .sqids import Sqids  # noqa: F401
