@@ -21,3 +21,6 @@ Homepage = "https://sqids.org/python"
 [build-system]
 requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["sqids"]

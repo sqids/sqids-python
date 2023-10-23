@@ -1,0 +1,1 @@
+from .sqids import Sqids

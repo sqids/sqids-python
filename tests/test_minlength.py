@@ -1,6 +1,7 @@
 import pytest
 import sys
-from sqids import Sqids, DEFAULT_ALPHABET
+from sqids import Sqids
+from sqids.constants import DEFAULT_ALPHABET
 
 
 def test_simple():
