@@ -31,13 +31,13 @@ Not good for:
 
 ## 🚀 Getting started
 
-Install the module from PyPI, e. g. with pip:
+Install the package from PyPI, e. g. with pip:
 
 ```bash
 pip install sqids
 ```
 
-Import the constructor from the `sqids` module:
+Import the `Sqids` class from the `sqids` package:
 
 ```python
 from sqids import Sqids
@@ -76,7 +76,7 @@ numbers = sqids.decode(id) # [1, 2, 3]
 Prevent specific words from appearing anywhere in the auto-generated IDs:
 
 ```python
-sqids = Sqids(blocklist={"86Rf07"})
+sqids = Sqids(blocklist=["86Rf07"])
 id = sqids.encode([1, 2, 3]) # "se8ojk"
 numbers = sqids.decode(id) # [1, 2, 3]
 ```
