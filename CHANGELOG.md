@@ -1,5 +1,10 @@
 # CHANGELOG
 
+**v0.4.0**
+- Use double underscore convention to specify private methods
+- Separate single module into a package for better readability
+- Add [PEP 561](https://peps.python.org/pep-0561/) compatible type hints
+
 **v0.3.0:** **⚠️ BREAKING CHANGE**
 - **Breaking change**: IDs change. Algorithm has been fine-tuned for better performance [[Issue #11](https://github.com/sqids/sqids-spec/issues/11)]
 - `alphabet` cannot contain multibyte characters

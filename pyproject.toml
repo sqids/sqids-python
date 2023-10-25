@@ -1,7 +1,7 @@
 [project]
 name = "sqids"
 description = "Generate YouTube-like ids from numbers."
-version = "0.3.0"
+version = "0.4.0"
 readme = "README.md"
 authors = []
 license = { file = "LICENSE" }
