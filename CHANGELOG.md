@@ -1,5 +1,8 @@
 # CHANGELOG
 
+**v0.4.1**
+- Compatibility with Python 3.6 (not officially supported)
+
 **v0.4.0**
 - Use double underscore convention to specify private methods
 - Separate single module into a package for better readability

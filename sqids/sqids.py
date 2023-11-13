@@ -58,9 +58,9 @@ class Sqids:
             (
                 ord(self.__alphabet[v % len(self.__alphabet)]) + i
                 for i, v in enumerate(numbers)
-            ),
-            start=len(numbers),
-        ) % len(self.__alphabet)
+            )
+        )
+        offset = (offset + len(numbers)) % len(self.__alphabet)
         offset = (offset + increment) % len(self.__alphabet)
         alphabet = self.__alphabet[offset:] + self.__alphabet[:offset]
         prefix = alphabet[0]
