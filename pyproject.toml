@@ -49,7 +49,7 @@ source = [
 
 [tool.coverage.report]
 skip_covered = true
-fail_under = 99
+fail_under = 100
 
 [tool.coverage.html]
 directory = "htmlcov/"
