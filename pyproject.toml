@@ -8,10 +8,13 @@ license = { file = "LICENSE" }
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 keywords = ["sqids", "encode", "generate", "ids", "hashids"]
 requires-python = ">=3.6"
@@ -28,3 +31,32 @@ packages = ["sqids"]
 
 [tool.setuptools.package-data]
 sqids = ["py.typed"]
+
+[tool.coverage.run]
+relative_files = true
+parallel = true
+branch = true
+source = [
+    "sqids",
+    "tests",
+]
+
+[tool.coverage.paths]
+source = [
+    "sqids",
+    "*/site-packages",
+]
+
+[tool.coverage.report]
+skip_covered = true
+fail_under = 99
+
+[tool.coverage.html]
+directory = "htmlcov/"
+skip_covered = false
+
+[tool.pytest.ini_options]
+addopts = "--color=yes"
+filterwarnings = [
+    "error",
+]
