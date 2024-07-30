@@ -1,5 +1,8 @@
 # CHANGELOG
 
+**Unreleased**
+- Support Python 3.12 and 3.13.
+
 **v0.4.1**
 - Compatibility with Python 3.6 (not officially supported)
 

@@ -93,3 +93,14 @@ def test_out_of_range_invalid_min_length():
 
     with pytest.raises(ValueError):
         Sqids(min_length=256)
+
+
+@pytest.mark.parametrize("min_length", ("bogus", {}, True))
+def test_min_length_type(min_length):
+    """Verify that non-integer min_length values are rejected.
+
+    `True` is a unique case; Python bools are subclasses of int.
+    """
+
+    with pytest.raises(TypeError, match="must be an int"):
+        Sqids(min_length=min_length)

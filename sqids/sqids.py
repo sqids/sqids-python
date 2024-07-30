@@ -20,7 +20,7 @@ class Sqids:
         if len(set(alphabet)) != len(alphabet):
             raise ValueError("Alphabet must contain unique characters")
 
-        if not isinstance(min_length, int):
+        if not isinstance(min_length, int) or isinstance(min_length, bool):
             raise TypeError("Minimum length must be an int")
 
         MIN_LENGTH_LIMIT = 255
