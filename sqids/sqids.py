@@ -136,13 +136,13 @@ class Sqids:
 
     def __to_id(self, num: int, alphabet: str) -> str:
         id_chars: List[str] = []
-        chars = list(alphabet)
         result = num
+        alphabet_length = len(alphabet)
 
         while True:
-            id_chars.insert(0, chars[result % len(chars)])
-            result = result // len(chars)
-            if result == 0:
+            id_chars.insert(0, alphabet[result % alphabet_length])
+            result = result // alphabet_length
+            if not result:
                 break
 
         return "".join(id_chars)
