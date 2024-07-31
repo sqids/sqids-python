@@ -110,13 +110,12 @@ class Sqids:
         while id_:
             separator = alphabet[0]
             chunks = id_.split(separator)
-            if chunks:
-                if not chunks[0]:
-                    return ret
+            if not chunks[0]:
+                return ret
 
-                ret.append(self.__to_number(chunks[0], alphabet[1:]))
-                if len(chunks) > 1:
-                    alphabet = self.__shuffle(alphabet)
+            ret.append(self.__to_number(chunks[0], alphabet[1:]))
+            if len(chunks) > 1:
+                alphabet = self.__shuffle(alphabet)
 
             id_ = separator.join(chunks[1:])
 
