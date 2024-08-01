@@ -44,8 +44,7 @@ class Sqids:
         if not numbers:
             return ""
 
-        in_range_numbers = [n for n in numbers if 0 <= n <= sys.maxsize]
-        if len(in_range_numbers) != len(numbers):
+        if not all(0 <= number <= sys.maxsize for number in numbers):
             raise ValueError(f"Encoding supports numbers between 0 and {sys.maxsize}")
 
         return self.__encode_numbers(numbers, 0)
