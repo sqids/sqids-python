@@ -2,6 +2,8 @@ from typing import List, Set
 import sys
 from .constants import DEFAULT_ALPHABET, DEFAULT_BLOCKLIST, DEFAULT_MIN_LENGTH
 
+DIGITS = set("0123456789")
+
 
 class Sqids:
     def __init__(
@@ -28,16 +30,33 @@ class Sqids:
                 f"Minimum length has to be between 0 and {MIN_LENGTH_LIMIT}"
             )
 
-        filtered_blocklist: Set[str] = set()
-        alphabet_lower = alphabet.lower()
-        for word_lower in (w.lower() for w in blocklist if len(w) >= 3):
-            intersection = [c for c in word_lower if c in alphabet_lower]
-            if len(intersection) == len(word_lower):
-                filtered_blocklist.add(word_lower)
+        exact_match: Set[str] = set()
+        match_at_ends: Set[str] = set()
+        match_anywhere: Set[str] = set()
+        alphabet_lower = set(alphabet.lower())
+        for word in blocklist:
+            if len(word) < 3:
+                continue
+            elif len(word) == 3:
+                exact_match.add(word.lower())
+                continue
+
+            word_lower = word.lower()
+            word_lower_set = set(word_lower)
+            if word_lower_set & alphabet_lower != word_lower_set:
+                continue
+
+            if word_lower_set & DIGITS:
+                match_at_ends.add(word_lower)
+            else:
+                match_anywhere.add(word_lower)
 
         self.__alphabet = self.__shuffle(alphabet)
         self.__min_length = min_length
-        self.__blocklist = filtered_blocklist
+        self.__blocklist_exact_match = exact_match
+        # When matching at the ends, `.startswith()` and `.endswith()` need a tuple.
+        self.__blocklist_match_at_ends = tuple(match_at_ends)
+        self.__blocklist_match_anywhere = match_anywhere
 
     def encode(self, numbers: List[int]) -> str:
         if not numbers:
@@ -84,7 +103,7 @@ class Sqids:
                 alphabet = self.__shuffle(alphabet)
                 id_ += alphabet[: min(self.__min_length - len(id_), len(alphabet))]
 
-        if self.__is_blocked_id(id_):
+        if len(id_) >= 3 and self.__is_blocked_id(id_):
             id_ = self.__encode_numbers(numbers, increment + 1)
 
         return id_
@@ -152,16 +171,17 @@ class Sqids:
     def __is_blocked_id(self, id_: str) -> bool:
         id_ = id_.lower()
 
-        for word in self.__blocklist:
-            if len(word) > len(id_):
-                continue
-            if len(id_) <= 3 or len(word) <= 3:
-                if id_ == word:
-                    return True
-            elif any(c.isdigit() for c in word):
-                if id_.startswith(word) or id_.endswith(word):
-                    return True
-            elif word in id_:
+        if len(id_) == 3:
+            return id_ in self.__blocklist_exact_match
+
+        if (
+            id_.startswith(self.__blocklist_match_at_ends)
+            or id_.endswith(self.__blocklist_match_at_ends)
+        ):
+            return True
+
+        for word in self.__blocklist_match_anywhere:
+            if word in id_:
                 return True
 
         return False
