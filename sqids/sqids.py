@@ -10,9 +10,8 @@ class Sqids:
         min_length: int = DEFAULT_MIN_LENGTH,
         blocklist: List[str] = DEFAULT_BLOCKLIST,
     ):
-        for char in alphabet:
-            if ord(char) > 127:
-                raise ValueError("Alphabet cannot contain multibyte characters")
+        if any(ord(char) > 127 for char in alphabet):
+            raise ValueError("Alphabet cannot contain multibyte characters")
 
         if len(alphabet) < 3:
             raise ValueError("Alphabet length must be at least 3")
