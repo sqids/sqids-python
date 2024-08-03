@@ -82,3 +82,12 @@ def test_max_encoding_attempts():
 
     with pytest.raises(Exception):
         sqids.encode([0])
+
+
+def test_small_words_are_ignored():
+    """Blocklist words shorter than 3 characters must be ignored."""
+
+    id_ = Sqids().encode([0])
+    assert id_ == "bM"
+    id_ = Sqids(blocklist=[id_]).encode([0])
+    assert id_ == "bM"
