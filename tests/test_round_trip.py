@@ -31,7 +31,7 @@ def test_round_trip_encoding(numbers, min_length, alphabet):
     assert sqid_1.decode(id_1) == numbers
 
     # If the ID is long enough, use it as a blocklist word and ensure it is blocked.
-    if len(id_1) >= 3:
+    if len(id_1) >= 3:  # pragma: nocover
         sqid_2 = sqids.Sqids(min_length=min_length, alphabet=alphabet, blocklist=[id_1])
         id_2 = sqid_2.encode(numbers)
         assert id_1 != id_2
