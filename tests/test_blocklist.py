@@ -1,3 +1,6 @@
+import pathlib
+import sys
+
 import pytest
 from sqids import Sqids
 
@@ -70,6 +73,16 @@ def test_blocklist_filtering_in_constructor():
     assert numbers == [1, 2, 3]
 
 
+@pytest.mark.parametrize("word", ("ab!", "abc!", "xyz"))
+def test_alphabet_is_not_superset_of_blocklist_word_characters(word):
+    """Verify that a non-subset blocklist word is ignored."""
+
+    sqids = Sqids(alphabet="abc", blocklist=[word])
+    assert sqids._Sqids__blocklist_exact_match == set()
+    assert sqids._Sqids__blocklist_match_at_ends == tuple()
+    assert sqids._Sqids__blocklist_match_anywhere == set()
+
+
 def test_max_encoding_attempts():
     alphabet = "abc"
     min_length = 3
@@ -82,3 +95,25 @@ def test_max_encoding_attempts():
 
     with pytest.raises(Exception):
         sqids.encode([0])
+
+
+def test_small_words_are_ignored():
+    """Blocklist words shorter than 3 characters must be ignored."""
+
+    id_ = Sqids().encode([0])
+    assert id_ == "bM"
+    id_ = Sqids(blocklist=[id_]).encode([0])
+    assert id_ == "bM"
+
+
+def test_constants_file_is_pristine():
+    """Verify the constants file is pristine."""
+
+    repo_root = pathlib.Path(__file__).parent.parent
+    sys.path.append(str(repo_root / "assets"))
+    import filter_blocklist
+
+    sets = filter_blocklist.filter_blocklist()
+    new_text = filter_blocklist.generate_new_constants_file(*sets)
+    error_message = "You must run assets/filter_blocklist.py!"
+    assert filter_blocklist.constants_path.read_text() == new_text, error_message

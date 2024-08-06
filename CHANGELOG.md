@@ -2,6 +2,9 @@
 
 **Unreleased**
 - Support Python 3.12 and 3.13.
+- Speed up encoding by ~85% by optimizing blocklist checks.
+  This improvement requires more calculation when the `Sqids` class is instantiated,
+  so users are encouraged to instantiate `Sqids` once and always reuse the instance.
 
 **v0.4.1**
 - Compatibility with Python 3.6 (not officially supported)
