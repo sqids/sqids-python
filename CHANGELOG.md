@@ -1,8 +1,8 @@
 # CHANGELOG
 
-**Unreleased**
+**v0.5.0**
 - Support Python 3.12 and 3.13.
-- Speed up encoding by ~85% by optimizing blocklist checks.
+- Speed up encoding by ~85% by optimizing blocklist checks ([PR #23](https://github.com/sqids/sqids-python/pull/23), thanks to [@kurtmckee](https://github.com/kurtmckee)).
   This improvement requires more calculation when the `Sqids` class is instantiated,
   so users are encouraged to instantiate `Sqids` once and always reuse the instance.
 
