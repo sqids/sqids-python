@@ -1,4 +1,4 @@
-from typing import List, Set, Tuple
+from typing import List, Sequence, Set, Tuple
 import sys
 from .constants import (
     DEFAULT_ALPHABET,
@@ -70,7 +70,7 @@ class Sqids:
         self.__alphabet = self.__shuffle(alphabet)
         self.__min_length = min_length
 
-    def encode(self, numbers: List[int]) -> str:
+    def encode(self, numbers: Sequence[int]) -> str:
         if not numbers:
             return ""
 
@@ -79,7 +79,7 @@ class Sqids:
 
         return self.__encode_numbers(numbers, 0)
 
-    def __encode_numbers(self, numbers: List[int], increment: int = 0) -> str:
+    def __encode_numbers(self, numbers: Sequence[int], increment: int = 0) -> str:
         if increment > len(self.__alphabet):
             raise ValueError("Reached max attempts to re-generate the ID")
 
