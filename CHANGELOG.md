@@ -1,5 +1,8 @@
 # CHANGELOG
 
+**v0.5.1**
+- Replace `numbers: List[int]` with `numbers: Sequence[int]` in encode function ([PR #25](https://github.com/sqids/sqids-python/pull/25), thanks to [@aliwo](https://github.com/aliwo)).
+
 **v0.5.0**
 - Support Python 3.12 and 3.13.
 - Speed up encoding by ~85% by optimizing blocklist checks ([PR #23](https://github.com/sqids/sqids-python/pull/23), thanks to [@kurtmckee](https://github.com/kurtmckee)).
