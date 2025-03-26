@@ -1,1 +1,3 @@
-from .sqids import Sqids  # noqa: F401
+from .sqids import Sqids
+
+__all__ = ["Sqids"]
