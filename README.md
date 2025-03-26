@@ -3,6 +3,7 @@
 [![PyPI package](https://badge.fury.io/py/sqids.svg)](https://pypi.org/project/sqids/)
 [![Github Actions](https://img.shields.io/github/actions/workflow/status/sqids/sqids-python/tests.yml)](https://github.com/sqids/sqids-python/actions)
 [![Downloads](https://img.shields.io/pypi/dm/sqids)](https://pypi.org/project/sqids/)
+[![libs.tech recommends](https://libs.tech/project/658041935/badge.svg)](https://libs.tech/project/658041935/sqids-python)
 
 [Sqids](https://sqids.org/python) (*pronounced "squids"*) is a small library that lets you **generate unique IDs from numbers**. It's good for link shortening, fast & URL-safe ID generation and decoding back into numbers for quicker database lookups.
 
