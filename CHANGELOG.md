@@ -1,5 +1,8 @@
 # CHANGELOG
 
+**v0.5.2**
+- Export Sqids from sqids module ([PR #28](https://github.com/sqids/sqids-python/pull/28), thanks to [@Popkornium18](https://github.com/Popkornium18)).
+
 **v0.5.1**
 - Replace `numbers: List[int]` with `numbers: Sequence[int]` in encode function ([PR #25](https://github.com/sqids/sqids-python/pull/25), thanks to [@aliwo](https://github.com/aliwo)).
 
